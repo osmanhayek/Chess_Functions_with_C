@@ -43,6 +43,13 @@ int    **coordinate_list(char **av,int size, int *actually_size)
     *actually_size = index;
     return (result);
 }
+static inline
+void    freeleme(int **coor, int size)
+{
+    for (int i = 0; i < size; i++)
+        free(coor[i]);
+    free(coor);
+}
 
 int main(int ac, char **av)
 {
@@ -104,6 +111,7 @@ int main(int ac, char **av)
         }
         if (!done)
             printf("Fail!");
+        freeleme(coor, coor_size);
     }
     printf("\n");
 }
