@@ -169,7 +169,7 @@ int is_check_mate(chess_piece *pieces, int num_of_pieces ,int board_size, int x_
 	return (0);
 }
 
-void    set_attack_for_rock(chess_piece *rock, int **coor, int coor_size, int size)
+int    **set_attack_for_rock(chess_piece *rock, int **coor, int coor_size, int size)
 {
 	int	i;
 	int index;
@@ -205,5 +205,135 @@ void    set_attack_for_rock(chess_piece *rock, int **coor, int coor_size, int si
 		rock->can_attack[index][0] = rock->x ;rock->can_attack[index++][1] = i;
 	}
 	rock->num_can_attack = index;
-	return (0);
+	return (rock->can_attack);
+}
+
+int    **set_attack_for_bichop(chess_piece *bishop, int **coor, int coor_size, int size)
+{
+	int	i;
+	int	j;
+	int	index;
+
+	index = 0;
+	bishop->can_attack = (int **)malloc(sizeof(int *) * (size * size));
+	for (i = bishop->x, j = bishop->y; j < size && i < size; i++, j++)
+	{
+		if (in_coor(i, j, coor, coor_size) && (i != bishop->x && j != bishop->y))
+			break;
+		bishop->can_attack[index] = (int *)malloc(sizeof(int) * 2);
+		bishop->can_attack[index][0] = i;bishop->can_attack[index++][1] = j;
+	}
+	for (i = bishop->x, j = bishop->y; j >= 0 && i >= 0; i--, j--)
+	{
+		if (in_coor(i, j, coor, coor_size) && (i != bishop->x && j != bishop->y))
+			break;
+		bishop->can_attack[index] = (int *)malloc(sizeof(int) * 2);
+		bishop->can_attack[index][0] = i;bishop->can_attack[index++][1] = j;
+	}
+	for (i = bishop->x, j = bishop->y; j < size && i >= 0; i--, j++)
+	{
+		if (in_coor(i, j, coor, coor_size) && (i != bishop->x && j != bishop->y))
+			break;
+		bishop->can_attack[index] = (int *)malloc(sizeof(int) * 2);
+		bishop->can_attack[index][0] = i;bishop->can_attack[index++][1] = j;
+	}
+	for (i = bishop->x, j = bishop->y; j >= 0 && i < size; i++, j--)
+	{
+		if (in_coor(i, j, coor, coor_size) && (i != bishop->x && j != bishop->y))
+			break;
+		bishop->can_attack[index] = (int *)malloc(sizeof(int) * 2);
+		bishop->can_attack[index][0] = i;bishop->can_attack[index++][1] = j;
+	}
+	bishop->num_can_attack = index;
+	return (bishop->can_attack);
+}
+
+void    set_attack_for_queen(chess_piece *queen, int **coor, int coor_size, int size)
+{
+	int	i;
+	int j;
+	int index;
+
+	queen->can_attack = (int **)malloc(sizeof(int *) * (size * size));
+	index = 0;
+	// The rock things
+
+	for (i = queen->x; i < size; i++)
+	{
+		if (in_coor(i, queen->y, coor, coor_size) && (i != queen->x))
+			break;
+		queen->can_attack[index] = (int *)malloc(sizeof(int) * 2);
+		queen->can_attack[index][0] = i; queen->can_attack[index++][1] = queen->y;
+	}
+	for (i = queen->x; i >= 0; i--)
+	{
+		if (in_coor(i, queen->y, coor, coor_size) && (i != queen->x))
+			break;
+		queen->can_attack[index] = (int *)malloc(sizeof(int) * 2);
+		queen->can_attack[index][0] = i; queen->can_attack[index++][1] = queen->y;
+	}
+	for (i = queen->y; i < size; i++)
+	{
+		if (in_coor(queen->x, i, coor, coor_size) && (i != queen->y))
+			break;
+		queen->can_attack[index] = (int *)malloc(sizeof(int) * 2);
+		queen->can_attack[index][0] = queen->x ;queen->can_attack[index++][1] = i;
+	}
+	for (i = queen->y; i >= 0; i--)
+	{
+		if (in_coor(queen->x, i, coor, coor_size) && (i != queen->y))
+			break;
+		queen->can_attack[index] = (int *)malloc(sizeof(int) * 2);
+		queen->can_attack[index][0] = queen->x ;queen->can_attack[index++][1] = i;
+	}
+
+	//The Bishops things
+	for (i = queen->x, j = queen->y; j < size && i < size; i++, j++)
+	{
+		if (in_coor(i, j, coor, coor_size) && (i != queen->x && j != queen->y))
+			break;
+		queen->can_attack[index] = (int *)malloc(sizeof(int) * 2);
+		queen->can_attack[index][0] = i;queen->can_attack[index++][1] = j;
+	}
+	for (i = queen->x, j = queen->y; j >= 0 && i >= 0; i--, j--)
+	{
+		if (in_coor(i, j, coor, coor_size) && (i != queen->x && j != queen->y))
+			break;
+		queen->can_attack[index] = (int *)malloc(sizeof(int) * 2);
+		queen->can_attack[index][0] = i;queen->can_attack[index++][1] = j;
+	}
+	for (i = queen->x, j = queen->y; j < size && i >= 0; i--, j++)
+	{
+		if (in_coor(i, j, coor, coor_size) && (i != queen->x && j != queen->y))
+			break;
+		queen->can_attack[index] = (int *)malloc(sizeof(int) * 2);
+		queen->can_attack[index][0] = i;queen->can_attack[index++][1] = j;
+	}
+	for (i = queen->x, j = queen->y; j >= 0 && i < size; i++, j--)
+	{
+		if (in_coor(i, j, coor, coor_size) && (i != queen->x && j != queen->y))
+			break;
+		queen->can_attack[index] = (int *)malloc(sizeof(int) * 2);
+		queen->can_attack[index][0] = i;queen->can_attack[index++][1] = j;
+	}
+	queen->num_can_attack = index;
+}
+
+void    set_attack_for_pawn(chess_piece *pawn, int **coor, int coor_size)
+{
+	int	index;
+
+	index = 0;
+	pawn->can_attack = (int **)malloc(sizeof(int *) * 2);
+	if (!in_coor(pawn->x - 1, pawn->y - 1, coor, coor_size))
+	{
+		pawn->can_attack[index] = (int *)malloc(sizeof(int) * 2);
+		pawn->can_attack[index][0] = pawn->x - 1;pawn->can_attack[index++][1] = pawn->y - 1;
+	}
+	if (!in_coor(pawn->x - 1, pawn->y + 1, coor, coor_size))
+	{
+		pawn->can_attack[index] = (int *)malloc(sizeof(int) * 2);
+		pawn->can_attack[index][0] = pawn->x - 1;pawn->can_attack[index++][1] = pawn->y + 1;
+	}
+	pawn->num_can_attack = index;
 }
